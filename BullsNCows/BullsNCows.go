@@ -10,48 +10,29 @@ import (
 	"time"
 )
 
-func info() {
-	time.Sleep(time.Millisecond * 500)
-	fmt.Println("")
-	fmt.Println("This game (as you can guess) is number game")
-	fmt.Println("Concept is simple - one person (or bot in our case) thinks hiden number, other person guess it.")
-	fmt.Println("Rules: In number 4 (in our case) unick uint numerals, guessperson shuld guess it for minimum rounds")
-	fmt.Println("if guess numeral equal to one of hiden numerals and on the same position - its Bull")
-	fmt.Println("if guess numeral equal to one of hiden numerals but on other position - its cow.")
-	time.Sleep(time.Second * 4)
-	fmt.Println("")
-	time.Sleep(time.Millisecond * 500)
-	fmt.Println("So.... lets start")
-	time.Sleep(time.Millisecond * 500)
-	fmt.Println("")
-	time.Sleep(time.Millisecond * 500)
-	fmt.Println("")
-	time.Sleep(time.Millisecond * 500)
-	fmt.Println("Genering random nums... usualy its take ~5 sec....")
-}
-
 func randomNum() int {
 	rand.Seed(time.Now().UnixNano())
-	n := 1 + rand.Intn(10)
-	if n == 10 {
-		n = 0
-	}
+	n := rand.Intn(9)
 	return n
 }
 
 func randomNums() []int {
 	for {
-		one := randomNum()
-		two := randomNum()
-		three := randomNum()
-		four := randomNum()
+		count := 0
+		nums := []int{randomNum(), randomNum(), randomNum(), randomNum()}
 
-		if one != 0 && one != two && one != three && one != four {
-			if two != three && two != four {
-				if three != four {
-					return []int{one, two, three, four}
+		if nums[0] != 0 {
+			count++
+			for g := range nums {
+				for i := range nums {
+					if nums[g] != nums[i] {
+						count++
+					}
 				}
 			}
+		}
+		if count == 13 {
+			return nums
 		}
 	}
 }
@@ -84,17 +65,11 @@ func decompGuessNum(s string) []int {
 }
 
 func compare(nums, guess []int) (cow, bull int) {
-	temp := [2]int{}
-	for i := range guess {
+	for i, r := range guess {
 		if guess[i] == nums[i] {
 			bull++
 		}
-	}
-
-	for i, r := range guess {
-		temp[0] = i
-		for f, g := range nums {
-			temp[1] = g
+		for f := range nums {
 			if r == nums[f] {
 				cow++
 			}
@@ -119,7 +94,6 @@ func conditions(bull, cow, turns int) {
 func main() {
 	turns := 1
 	fmt.Println("Number game Bools and Cows")
-	info()
 	nums := randomNums()
 	fmt.Println("Nums are ready!")
 	for {
