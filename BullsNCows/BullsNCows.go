@@ -16,22 +16,28 @@ func randomNum(a, n int) int {
 	return r
 }
 
-func randomNums() []int {
-	for {
-		count := 0
-		nums := []int{randomNum(1, 8), randomNum(0, 9), randomNum(0, 9), randomNum(0, 9)}
-		for g := range nums {
-			for i := range nums {
-				if nums[g] != nums[i] {
-					count++
-				}
+func isValid(nums []int) bool {
+	for g := range nums {
+		for i := range nums {
+			if nums[g] == nums[i] {
+				return false
 			}
 		}
-
-		if count == 12 {
-			return nums
-		}
 	}
+	return true
+}
+func randomNums() []int {
+	b := false
+	var nums []int
+	for {
+		nums = []int{randomNum(1, 8), randomNum(0, 9), randomNum(0, 9), randomNum(0, 9)}
+		if b == true {
+			break
+		}
+		b = isValid(nums)
+	}
+	fmt.Println(nums)
+	return nums
 }
 
 func readerCnsl() string {
@@ -61,7 +67,7 @@ func decompGuessNum(s string) []int {
 	return numI[0:4]
 }
 
-func compare(nums, guess []int, t int) {
+func compare(nums, guess []int, t int) bool {
 	bull := 0
 	cow := 0
 
@@ -81,15 +87,16 @@ func compare(nums, guess []int, t int) {
 		fmt.Println("")
 		fmt.Printf("Cowgratulations, you won, it takes %d turns.", t)
 		fmt.Println("")
-		os.Exit(1)
+		return true
 	} else {
 		fmt.Println("")
 		fmt.Printf("In your number %d cows and %d bulls", cow, bull)
 		fmt.Println("")
+		return false
 	}
 }
 
-func main() {
+func fin() {
 	turns := 0
 	fmt.Println("Number game Bools and Cows")
 	nums := randomNums()
@@ -98,6 +105,12 @@ func main() {
 		turns++
 		guessStr := readerCnsl()
 		guess := decompGuessNum(guessStr)
-		compare(nums, guess, turns)
+		b := compare(nums, guess, turns)
+		if b == true {
+			break
+		}
 	}
+}
+func main() {
+	fin()
 }
