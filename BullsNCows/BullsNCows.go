@@ -19,22 +19,22 @@ func randomNum(a, n int) int {
 func isValid(nums []int) bool {
 	for g := range nums {
 		for i := range nums {
-			if nums[g] == nums[i] {
-				return false
+			if g != i {
+				if nums[g] == nums[i] {
+					return false
+				}
 			}
 		}
 	}
 	return true
 }
 func randomNums() []int {
-	b := false
 	var nums []int
 	for {
 		nums = []int{randomNum(1, 8), randomNum(0, 9), randomNum(0, 9), randomNum(0, 9)}
-		if b == true {
+		if isValid(nums) {
 			break
 		}
-		b = isValid(nums)
 	}
 	fmt.Println(nums)
 	return nums
@@ -96,7 +96,7 @@ func compare(nums, guess []int, t int) bool {
 	}
 }
 
-func fin() {
+func main() {
 	turns := 0
 	fmt.Println("Number game Bools and Cows")
 	nums := randomNums()
@@ -105,12 +105,8 @@ func fin() {
 		turns++
 		guessStr := readerCnsl()
 		guess := decompGuessNum(guessStr)
-		b := compare(nums, guess, turns)
-		if b == true {
+		if compare(nums, guess, turns) {
 			break
 		}
 	}
-}
-func main() {
-	fin()
 }
